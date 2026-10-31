@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metronome</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h1>Metronome</h1>
+
+<!-- ── Playback controls ──────────────────────────────────────────── -->
+<section id="controls">
+  <div class="control-group">
+    <label for="bpm">BPM</label>
+    <input type="range" id="bpm" min="40" max="240" value="120">
+    <span id="bpm-display">120</span>
+  </div>
+
+  <div class="control-group">
+    <label for="subdivision">Note</label>
+    <select id="subdivision">
+      <option value="quarter">Quarter (♩)</option>
+      <option value="eighth">Eighth (♪)</option>
+      <option value="sixteenth">Sixteenth (𝅘𝅥𝅯)</option>
+      <option value="triplet">Triplet (♩3)</option>
+    </select>
+  </div>
+
+  <div class="control-group">
+    <label for="bars">Bars</label>
+    <input type="number" id="bars" min="1" max="8" value="1">
+  </div>
+
+  <button id="btn-start">▶ Start</button>
+  <button id="btn-stop" disabled>■ Stop</button>
+</section>
+
+<!-- ── Beat grid ──────────────────────────────────────────────────── -->
+<div id="grid-wrapper">
+  <h2>Pattern — click cells to toggle beats</h2>
+  <div id="grid-container"></div>
+</div>
+
+<!-- ── Recording ──────────────────────────────────────────────────── -->
+<section id="recording-section">
+  <h2>Recording</h2>
+  <div id="recording-controls">
+    <button id="btn-enable-mic">🎙 Enable Microphone</button>
+
+    <label class="check-label">
+      <input type="checkbox" id="record-toggle" disabled>
+      Record while playing
+    </label>
+
+    <div class="control-group">
+      <label for="repeat-bars">Auto-stop after</label>
+      <input type="number" id="repeat-bars" min="1" max="64" value="4">
+      <label>bars</label>
+    </div>
+
+    <label class="check-label" title="512-sample buffer (~12ms resolution) vs default 4096 (~93ms). Uses more CPU.">
+      <input type="checkbox" id="hires-toggle">
+      High-res timing
+    </label>
+  </div>
+  <div id="bar-counter" hidden>Bar <span id="bar-number">1</span> / <span id="bar-total">—</span></div>
+  <div id="timing-indicator" hidden>
+    <div id="timing-label">Timing</div>
+    <div id="timing-meter-wrap">
+      <span class="timing-edge-label">Early</span>
+      <div id="timing-meter">
+        <div id="timing-center-line"></div>
+        <div id="timing-needle"></div>
+      </div>
+      <span class="timing-edge-label">Late</span>
+    </div>
+    <div id="timing-value">—</div>
+    <div id="timing-history"></div>
+  </div>
+</section>
+
+<p id="status" class="status">Press Start to begin.</p>
+
+<!-- ── Waveform overlay ───────────────────────────────────────────── -->
+<section id="waveform-section" hidden>
+  <div id="waveform-header">
+    <h2>Recording vs. Clicks</h2>
+    <div id="waveform-controls">
+      <label for="zoom-range">Zoom</label>
+      <input type="range" id="zoom-range" min="1" max="32" value="1" step="0.5">
+      <span id="zoom-display">1×</span>
+      <button id="btn-zoom-out">−</button>
+      <button id="btn-zoom-in">+</button>
+      <button id="btn-zoom-fit">Fit</button>
+    </div>
+  </div>
+  <div id="waveform-legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#4ade80"></div>
+      Recorded audio
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#fbbf24"></div>
+      Bar start (accent beat)
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:rgba(148,163,184,0.5)"></div>
+      Beat markers
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch onset-swatch"></div>
+      Onset (peak hit)
+    </div>
+  </div>
+  <div id="waveform-scroll-wrapper">
+    <canvas id="waveform-canvas"></canvas>
+  </div>
+  <div id="playback-controls">
+    <button id="btn-play">▶ Play back</button>
+    <button id="btn-play-stop" disabled>■ Stop</button>
+    <div class="control-group">
+      <label for="stretch-range">Speed</label>
+      <input type="range" id="stretch-range" min="0.25" max="2" value="1" step="0.05">
+      <span id="stretch-display">1.00×</span>
+    </div>
+    <button id="btn-stretch-half" class="preset">½×</button>
+    <button id="btn-stretch-1" class="preset">1×</button>
+    <button id="btn-stretch-2" class="preset">2×</button>
+  </div>
+</section>
+
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
